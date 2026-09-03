@@ -57,68 +57,35 @@ mesma resposta, pois ambas calculam `|R(S)|`. A escolha entre elas não é
 questão de corretude nem de complexidade, e sim de robustez de implementação
 e do que sobra de informação extra.
 
-## 4. Escolha justificada
 
-1. **Informação extra:** se fosse necessário saber "em que onda cada peça
-   cai", só a BFS responde isso diretamente através do nível/distância.
-2. **Naturalidade da implementação:** BFS com `deque`/`popleft()` é
-   iterativa por construção — não existe versão recursiva natural de BFS,
-   então o risco de estouro de pilha já não existe de saída.
-3. **Decisão final:** com `n` até `10.000` e a possibilidade de uma cadeia
-   longa (`1->2->3->...->10000`), uma DFS recursiva quebraria em Python.
-   A BFS nunca teria esse risco, mesmo na forma mais direta de implementação.
-
-Para este problema, DFS e BFS empatam em corretude e complexidade — ambas
-calculam `|R(S)|` em `O(n+m)`. A escolha pela BFS se justifica pela
-robustez: sua implementação iterativa natural elimina o risco de estouro de
-pilha presente na DFS recursiva, no pior caso permitido pelo enunciado (`n`
-até `10.000`).
-
-## 5. Adaptação para múltiplas fontes
-
-A BFS de livro-texto processa uma única fonte. O problema tem `l` fontes
-simultâneas (todos os dominós batidos à mão caem "ao mesmo tempo"), então a
-adaptação coloca todas as fontes na fila antes de iniciar o laço principal —
-sem isso, tratar as fontes uma a uma criaria níveis de distância artificiais
-entre elas, quando na prática todas caem na mesma "onda" inicial.
-
-## 6. Integração
-
-A versão final (`src/solucao.py`) já implementa exatamente essa BFS
-multifonte, substituindo a DFS didática usada no Marco 3: vetor `caido`
-(equivalente ao vetor de visitados), fila `deque` inicializada com todas as
-`l` fontes, e contagem de `total` incrementada a cada vértice inserido na
-fila. Não há mais nenhuma DFS na versão de submissão — o Marco 3 permaneceu
-apenas como material didático em `docs/marco3-dfs.md`.
-
-## 7. Testes
-
-| instância                                              | fontes  | esperado | resultado |
-|----------------------------------------------------------|---------|----------|-----------|
-| sample do enunciado (`tests/sample.in`)                   | `{2}`   | 2        | OK        |
-| árvore, Marco 3/4 (`tests/arvore.in`)                      | `{1}`   | 7        | OK        |
-| grafo com ciclo (`tests/instancia_pequena.in`)             | `{1,6}` | 6        | OK        |
-| casos de borda (`tests/casos_de_borda.in`)                 | várias  | `0,0,2,3,4` | OK    |
-
-`bash tests/run_tests.sh` reporta `OK` nas quatro instâncias.
-
-## 8. Complexidade
+## 4. Complexidade
 
 `O(n + m)` de tempo — cada vértice entra na fila no máximo uma vez, cada
 aresta é examinada no máximo uma vez — e `O(n + m)` de espaço (lista de
 adjacência + vetor de visitados + fila). Com `n, m <= 10.000`, é folgado
 mesmo multiplicado pelo número de casos de teste `T`.
 
-## 9. Submissão
 
-_A preencher após submissão no juiz._
-
-## 10. Conclusão
+## 5. Conclusão
 
 O problema foi modelado como grafo dirigido (queda de dominó implica queda
 do próximo), representado por lista de adjacência pela esparsidade típica
 das instâncias (`m` da ordem de `n`, não de `n²`). DFS e BFS resolvem o
 problema de forma equivalente em corretude e complexidade — ambas calculam
-`|R(S)|` em `O(n+m)` — e a BFS venceu na versão de submissão por robustez de
-implementação (iterativa por construção, sem risco de estouro de pilha),
-não por ser um algoritmo "melhor" em abstrato.
+`|R(S)|` em `O(n+m)`.
+
+Para o **nosso caso**, a escolha recai sobre a **DFS**: além de contar
+`|R(S)|`, o que nos interessa é a *profundidade* da propagação — quão longe,
+em número de dominós encadeados, uma batida inicial consegue chegar. A DFS
+explora cada ramo até o fim antes de retroceder, então o nível da pilha (ou
+da recursão) no momento em que um vértice é descoberto corresponde ao
+comprimento do caminho percorrido desde a fonte, e o maior valor atingido é
+a profundidade máxima da cadeia. A BFS, por avançar em ondas, entrega a
+distância mínima até a fonte, não o encadeamento mais profundo que estamos
+querendo medir.
+
+Na prática a DFS é implementada de forma **iterativa com pilha explícita**
+(não recursiva), pois `n` pode chegar a `10.000` e uma cadeia longa
+(`1->2->...->10000`) estouraria a pilha de chamadas do Python. Assim
+mantém-se a robustez de uma implementação iterativa sem abrir mão da
+informação de profundidade que motivou a escolha.
