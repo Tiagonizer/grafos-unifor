@@ -1,18 +1,3 @@
-"""
-   Dominó 2 — T1 / Unidade 1 — Resolução de Problemas com Grafos (UNIFOR)
-
-   Execução:  python3 main.py < ../dados/testes/sample.in
-
-   Alcançabilidade multi-fonte em um dígrafo: dadas as peças derrubadas à
-   mão (conjunto S), conta quantas caem no total, |R(S)|. O(V + E).
-
-   Node, LinkIterator, Bag, Digraph e DirectedDFS são cópias literais de
-   unidade-1/algs4-py/algs4/ (ver tabela no README). Estão copiadas aqui
-   porque o juiz aceita o envio de um único arquivo.
-"""
-
-# --- algs4/utils/linklist.py ---
-
 class Node:
 
     def __init__(self, item, next_node):
@@ -33,8 +18,6 @@ class LinkIterator:
             self.current = self.current.next
             return item
 
-
-# --- algs4/bag.py ---
 
 class Bag:
 
@@ -60,8 +43,6 @@ class Bag:
         self.n += 1
 
 
-# --- algs4/digraph.py ---
-
 class Digraph:
 
     def __init__(self, v=0, **kwargs):
@@ -70,7 +51,6 @@ class Digraph:
         self.adj = [Bag() for _ in range(self.V)]
 
         if 'file' in kwargs:
-            # init a digraph by a file input
             in_file = kwargs['file']
             self.V = int(in_file.readline())
             self.adj = [Bag() for _ in range(self.V)]
@@ -117,8 +97,6 @@ class Digraph:
         return R
 
 
-# --- algs4/directed_dfs.py ---
-
 class DirectedDFS:
 
     def __init__(self, G, sources):
@@ -137,8 +115,6 @@ class DirectedDFS:
     def marked(self, v):
         return self._marked[v]
 
-
-# --- leitura da entrada do problema ---
 
 if __name__ == '__main__':
     import sys

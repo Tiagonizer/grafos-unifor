@@ -1,12 +1,3 @@
-"""
-   Dominó 2 — versão simplificada, sem as classes do algs4.
-
-   Execução:  python3 simplificado.py < ../dados/testes/instancia_pequena.in
-
-   NÃO é a solução enviada ao juiz (essa é src/main.py). Mesmo algoritmo e
-   mesmo resultado, mas com listas Python comuns no lugar de
-   Bag/Node/Digraph/DirectedDFS.
-"""
 import sys
 
 

@@ -1,22 +1,8 @@
-"""
-   Dominó 2 — medidas do grafo (Marco 2). Não é enviado ao juiz.
-
-   Execução:  python3 medidas.py < ../dados/testes/instancia_pequena.in
-
-   Imprime, para cada caso de teste, as medidas que validam a
-   representação: graus de entrada e saída, densidade, componentes
-   fracamente conexas e componentes fortemente conexas.
-
-   Digraph vem de main.py; UF, DepthFirstOrder e KosarajuSCC são cópias
-   literais de unidade-1/algs4-py/algs4/ (ver tabela no README).
-"""
 import sys
 from collections import deque
 
 from main import Digraph
 
-
-# --- algs4/uf.py ---
 
 class UF:
 
@@ -48,8 +34,6 @@ class UF:
         self.count -= 1
 
 
-# --- algs4/depth_first_order.py ---
-
 class DepthFirstOrder:
 
     def __init__(self, G):
@@ -76,8 +60,6 @@ class DepthFirstOrder:
         return self.reverse_post()
 
 
-# --- algs4/kosaraju_scc.py ---
-
 class KosarajuSCC:
     def __init__(self, G):
         self.marked = [False for _ in range(G.V)]
@@ -100,8 +82,6 @@ class KosarajuSCC:
     def strongly_connected(self, v, w):
         return self.id[v] == self.id[w]
 
-
-# --- medidas da instância ---
 
 if __name__ == '__main__':
     sys.setrecursionlimit(30000)

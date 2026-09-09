@@ -1,15 +1,3 @@
-"""
-   Dominó 2 — BFS de referência (Marco 4). NÃO é a solução enviada ao juiz.
-
-   Execução:  python3 bfs_referencia.py < ../dados/testes/arvore.in
-
-   Roda a BFS sobre o grafo dos Marcos 3 e 4 (um único caso, uma única
-   fonte) e imprime as listas marked e edge_to que a BreadthFirstPaths do
-   algs4-py monta.
-
-   BreadthFirstPaths é cópia literal de
-   unidade-1/algs4-py/algs4/breadth_first_paths.py.
-"""
 import sys
 from collections import deque
 
@@ -51,7 +39,7 @@ class BreadthFirstPaths:
 
 
 numeros = iter(map(int, sys.stdin.read().split()))
-next(numeros)                      # quantidade de casos (sempre 1 aqui)
+next(numeros)
 n, m, l = next(numeros), next(numeros), next(numeros)
 arestas = [(next(numeros), next(numeros)) for _ in range(m)]
 fontes = [next(numeros) for _ in range(l)]
