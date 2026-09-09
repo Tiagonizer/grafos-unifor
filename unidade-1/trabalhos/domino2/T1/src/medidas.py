@@ -1,130 +1,166 @@
 """
-Script de apoio (Marco 2): calcula graus, densidade e componentes
-para validar a representacao escolhida. Nao e enviado ao juiz -
-uso: python3 medidas.py < entrada.in
+   Dominó 2 — medidas do grafo (Marco 2). Não é enviado ao juiz.
+
+   Execução:  python3 medidas.py < ../dados/testes/instancia_pequena.in
+
+   Imprime, para cada caso de teste, as medidas que validam a
+   representação: graus de entrada e saída, densidade, componentes
+   fracamente conexas e componentes fortemente conexas.
+
+   Digraph vem de main.py; as classes abaixo são cópias literais de
+   unidade-1/algs4-py/algs4/:
+
+       UF ................. uf.py
+       DepthFirstOrder .... depth_first_order.py
+       KosarajuSCC ........ kosaraju_scc.py
 """
 import sys
 from collections import deque
 
+from main import Digraph
 
-def ler_casos():
-    dados = sys.stdin.buffer.read().split()
+
+# --- algs4/uf.py ---
+
+class UF:
+
+    def __init__(self, n):
+        self.count = n
+        self.id = list(range(n))
+        self.sz = [1] * n
+
+    def connected(self, p, q):
+        return self.find(p) == self.find(q)
+
+
+
+
+
+    def find(self, p):
+        while self.id[p] != p:
+            self.id[p] = self.id[self.id[p]]  # path compression
+            p = self.id[p]
+        return p
+
+    def union(self, p, q):
+        pId = self.find(p)
+        qId = self.find(q)
+        if pId == qId:
+            return
+        if self.sz[pId] < self.sz[qId]:
+            self.id[pId] = qId
+            self.sz[qId] += self.sz[pId]
+        else:
+            self.id[qId] = pId
+            self.sz[pId] += self.sz[qId]
+        self.count -= 1
+
+
+# --- algs4/depth_first_order.py ---
+
+class DepthFirstOrder:
+
+    def __init__(self, G):
+        self.marked = [False for _ in range(G.V)]
+        self.pre = deque()
+        self.post = deque()
+        for w in range(G.V):
+            if not self.marked[w]:
+                self.dfs(G, w)
+
+    def dfs(self, G, v):
+        self.pre.append(v)
+        self.marked[v] = True
+
+        for w in G.adj[v]:
+            if not self.marked[w]:
+                self.dfs(G, w)
+        self.post.append(v)
+
+    def reverse_post(self):
+        return reversed(self.post)
+
+    def reversePost(self):
+        return self.reverse_post()
+
+
+# --- algs4/kosaraju_scc.py ---
+
+class KosarajuSCC:
+    def __init__(self, G):
+        self.marked = [False for _ in range(G.V)]
+        self.id = [0 for _ in range(G.V)]
+        self.count = 0
+
+        order = DepthFirstOrder(G.reverse())
+        for v in order.reverse_post():
+            if not self.marked[v]:
+                self.dfs(G, v)
+                self.count += 1
+
+    def dfs(self, G, v):
+        self.marked[v] = True
+        self.id[v] = self.count
+        for w in G.adj[v]:
+            if not self.marked[w]:
+                self.dfs(G, w)
+
+    def strongly_connected(self, v, w):
+        return self.id[v] == self.id[w]
+
+
+# --- medidas da instância ---
+
+if __name__ == '__main__':
+    sys.setrecursionlimit(30000)
+
+    dados = sys.stdin.read().split()
     ponteiro = 0
 
     def prox():
-        nonlocal ponteiro
-        valor = dados[ponteiro]
+        global ponteiro
+        valor = int(dados[ponteiro])
         ponteiro += 1
-        return int(valor)
+        return valor
 
-    T = prox()
-    casos = []
-    for _ in range(T):
-        n = prox()
-        m = prox()
-        l = prox()
+    for caso in range(1, prox() + 1):
+        n, m, l = prox(), prox(), prox()
+
         arestas = [(prox(), prox()) for _ in range(m)]
+
+        # Bag insere na frente (LIFO): inserir as arestas de trás para
+        # frente faz a ordem de iteração coincidir com a ordem de leitura
+        # (mesmo ajuste de main.py, mantém consistência com o Marco 3).
+        g = Digraph(n + 1)          # índice 0 não é usado (peças são 1..n)
+        grau_entrada = [0] * (n + 1)
+        for x, y in reversed(arestas):
+            g.add_edge(x, y)
+            grau_entrada[y] += 1
+
         fontes = [prox() for _ in range(l)]
-        casos.append((n, m, l, arestas, fontes))
-    return casos
 
+        # componentes fracamente conexas: union-find sobre o grafo sem direção
+        uf = UF(n + 1)
+        for v in range(1, n + 1):
+            for w in g.adj[v]:
+                uf.union(v, w)
+        fracas = len({uf.find(v) for v in range(1, n + 1)})
 
-def componentes_fracas(n, arestas):
-    pai = list(range(n + 1))
+        # componentes fortemente conexas: Kosaraju
+        scc = KosarajuSCC(g)
+        fortes = len({scc.id[v] for v in range(1, n + 1)})
 
-    def find(a):
-        while pai[a] != a:
-            pai[a] = pai[pai[a]]
-            a = pai[a]
-        return a
+        soma_saida = sum(g.degree(v) for v in range(1, n + 1))
+        soma_entrada = sum(grau_entrada[1:])
+        densidade = m / (n * (n - 1)) if n > 1 else 0.0
 
-    def uniao(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            pai[ra] = rb
-
-    for x, y in arestas:
-        if x != y:
-            uniao(x, y)
-
-    return len({find(v) for v in range(1, n + 1)})
-
-
-def componentes_fortes(n, adj):
-    """Kosaraju: duas passagens de DFS iterativa."""
-    visitado = [False] * (n + 1)
-    ordem = []
-
-    for inicio in range(1, n + 1):
-        if visitado[inicio]:
-            continue
-        pilha = [(inicio, iter(adj[inicio]))]
-        visitado[inicio] = True
-        while pilha:
-            v, it = pilha[-1]
-            avancou = False
-            for w in it:
-                if not visitado[w]:
-                    visitado[w] = True
-                    pilha.append((w, iter(adj[w])))
-                    avancou = True
-                    break
-            if not avancou:
-                ordem.append(v)
-                pilha.pop()
-
-    adj_t = [[] for _ in range(n + 1)]
-    for v in range(1, n + 1):
-        for w in adj[v]:
-            adj_t[w].append(v)
-
-    visitado = [False] * (n + 1)
-    num_sccs = 0
-    for v in reversed(ordem):
-        if visitado[v]:
-            continue
-        num_sccs += 1
-        pilha = [v]
-        visitado[v] = True
-        while pilha:
-            atual = pilha.pop()
-            for w in adj_t[atual]:
-                if not visitado[w]:
-                    visitado[w] = True
-                    pilha.append(w)
-
-    return num_sccs
-
-
-def analisar(n, m, l, arestas, fontes):
-    adj = [[] for _ in range(n + 1)]
-    grau_saida = [0] * (n + 1)
-    grau_entrada = [0] * (n + 1)
-
-    for x, y in arestas:
-        adj[x].append(y)
-        grau_saida[x] += 1
-        grau_entrada[y] += 1
-
-    soma_saida = sum(grau_saida)
-    soma_entrada = sum(grau_entrada)
-    densidade = m / (n * (n - 1)) if n > 1 else 0.0
-
-    print(f"n={n} m={m} l={l}")
-    print(f"soma grau_saida={soma_saida}  soma grau_entrada={soma_entrada}  m={m}")
-    print(f"densidade m/(n*(n-1))={densidade:.6f}")
-    print(f"fontes declaradas={l}  fontes distintas={len(set(fontes))}")
-    print(f"componentes fracamente conexos={componentes_fracas(n, arestas)}")
-    print(f"componentes fortemente conexos={componentes_fortes(n, adj)}")
-    for v in range(1, n + 1):
-        print(f"  v={v}  d+={grau_saida[v]}  d-={grau_entrada[v]}")
-
-
-def main():
-    for i, caso in enumerate(ler_casos(), start=1):
-        print(f"=== Caso {i} ===")
-        analisar(*caso)
-
-
-if __name__ == "__main__":
-    main()
+        print("=== Caso %d ===" % caso)
+        print("n=%d m=%d l=%d" % (n, m, l))
+        print("soma grau_saida=%d  soma grau_entrada=%d  m=%d"
+              % (soma_saida, soma_entrada, m))
+        print("densidade m/(n*(n-1))=%.6f" % densidade)
+        print("fontes declaradas=%d  fontes distintas=%d" % (l, len(set(fontes))))
+        print("componentes fracamente conexos=%d" % fracas)
+        print("componentes fortemente conexos=%d" % fortes)
+        for v in range(1, n + 1):
+            print("  v=%d  d+=%d  d-=%d" % (v, g.degree(v), grau_entrada[v]))
