@@ -19,7 +19,7 @@ T1/
 │   ├── main.py             solução enviada ao juiz (DFS, só classes do algs4)
 │   ├── medidas.py          script de apoio do Marco 2 (não é enviado)
 │   ├── bfs_referencia.py   BFS de referência para o Marco 4 (não é enviado)
-│   └── simplificado.py     mesma solução, comentada linha a linha (estudo)
+│   └── simplificado.py     mesma solução com listas Python comuns (estudo)
 ├── evidencias/           comprovante de "Accepted" no juiz
 ├── apresentacao/         slides
 └── dados/

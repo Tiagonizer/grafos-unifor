@@ -7,12 +7,8 @@
    representação: graus de entrada e saída, densidade, componentes
    fracamente conexas e componentes fortemente conexas.
 
-   Digraph vem de main.py; as classes abaixo são cópias literais de
-   unidade-1/algs4-py/algs4/:
-
-       UF ................. uf.py
-       DepthFirstOrder .... depth_first_order.py
-       KosarajuSCC ........ kosaraju_scc.py
+   Digraph vem de main.py; UF, DepthFirstOrder e KosarajuSCC são cópias
+   literais de unidade-1/algs4-py/algs4/ (ver tabela no README).
 """
 import sys
 from collections import deque
@@ -32,13 +28,9 @@ class UF:
     def connected(self, p, q):
         return self.find(p) == self.find(q)
 
-
-
-
-
     def find(self, p):
         while self.id[p] != p:
-            self.id[p] = self.id[self.id[p]]  # path compression
+            self.id[p] = self.id[self.id[p]]
             p = self.id[p]
         return p
 
@@ -128,10 +120,7 @@ if __name__ == '__main__':
 
         arestas = [(prox(), prox()) for _ in range(m)]
 
-        # Bag insere na frente (LIFO): inserir as arestas de trás para
-        # frente faz a ordem de iteração coincidir com a ordem de leitura
-        # (mesmo ajuste de main.py, mantém consistência com o Marco 3).
-        g = Digraph(n + 1)          # índice 0 não é usado (peças são 1..n)
+        g = Digraph(n + 1)
         grau_entrada = [0] * (n + 1)
         for x, y in reversed(arestas):
             g.add_edge(x, y)
@@ -139,14 +128,12 @@ if __name__ == '__main__':
 
         fontes = [prox() for _ in range(l)]
 
-        # componentes fracamente conexas: union-find sobre o grafo sem direção
         uf = UF(n + 1)
         for v in range(1, n + 1):
             for w in g.adj[v]:
                 uf.union(v, w)
         fracas = len({uf.find(v) for v in range(1, n + 1)})
 
-        # componentes fortemente conexas: Kosaraju
         scc = KosarajuSCC(g)
         fortes = len({scc.id[v] for v in range(1, n + 1)})
 

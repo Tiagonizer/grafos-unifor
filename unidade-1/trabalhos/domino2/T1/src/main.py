@@ -6,17 +6,9 @@
    Alcançabilidade multi-fonte em um dígrafo: dadas as peças derrubadas à
    mão (conjunto S), conta quantas caem no total, |R(S)|. O(V + E).
 
-   As classes abaixo são cópias literais do subconjunto de grafos do
-   "Algorithms, 4th Edition" (Sedgewick & Wayne) disponibilizado na
-   disciplina em unidade-1/algs4-py/algs4/:
-
-       Node, LinkIterator ... utils/linklist.py
-       Bag ................. bag.py
-       Digraph ............. digraph.py
-       DirectedDFS ......... directed_dfs.py
-
-   Estão copiadas aqui, e não importadas, porque o juiz aceita o envio de
-   um único arquivo. Nenhuma delas foi modificada.
+   Node, LinkIterator, Bag, Digraph e DirectedDFS são cópias literais de
+   unidade-1/algs4-py/algs4/ (ver tabela no README). Estão copiadas aqui
+   porque o juiz aceita o envio de um único arquivo.
 """
 
 # --- algs4/utils/linklist.py ---
@@ -150,11 +142,6 @@ class DirectedDFS:
 
 if __name__ == '__main__':
     import sys
-
-    # A DFS do algs4 é recursiva e o enunciado permite n <= 10.000, ou seja,
-    # uma cadeia 1->2->...->10000 chega a 10.000 chamadas aninhadas. O limite
-    # padrão do CPython é 1.000; a thread abaixo roda a solução com limite e
-    # pilha maiores, sem precisar alterar a classe DirectedDFS.
     import threading
 
     def resolver():
@@ -170,17 +157,8 @@ if __name__ == '__main__':
         respostas = []
         for _ in range(prox()):
             n, m, l = prox(), prox(), prox()
-
-            # O algs4 numera vértices de 0 a V-1 e o enunciado numera as
-            # peças de 1 a n: alocamos n + 1 e deixamos o índice 0 sem uso.
             arestas = [(prox(), prox()) for _ in range(m)]
 
-            # Bag.add insere sempre na frente da lista ligada (Node(item,
-            # first)), então iterar um Bag devolve os itens na ordem
-            # INVERSA à de inserção. Para que a ordem de visita da DFS siga
-            # a ordem em que as arestas foram lidas — como documentado no
-            # Marco 3 —, inserimos as arestas de trás para frente: a
-            # inversão da leitura mais a inversão da Bag se cancelam.
             g = Digraph(n + 1)
             for x, y in reversed(arestas):
                 g.add_edge(x, y)
