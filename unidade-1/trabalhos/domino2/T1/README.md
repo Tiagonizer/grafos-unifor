@@ -31,7 +31,10 @@ T1/
 Todo o código vem do subconjunto de grafos disponibilizado pelo professor
 em [`unidade-1/algs4-py`](../../../algs4-py) — recorte Python de
 *Algorithms, 4th Edition* (Sedgewick & Wayne). As classes são **cópias
-literais**, sem nenhuma alteração:
+literais**, com uma única correção: `LinkIterator` ganhou `__iter__`
+(retornando `self`), exigido pelo protocolo de iterador do Python 3.13
+para uso em compreensões e generators. A mesma correção foi aplicada em
+`algs4-py/algs4/utils/linklist.py`.
 
 | classe | origem no algs4-py | papel aqui |
 |---|---|---|
