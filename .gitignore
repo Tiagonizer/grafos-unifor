@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# artefatos de antivírus / sincronização (arquivos .!NNNNN!nome)
+.\!*\!*
+
+# Python
+__pycache__/
+*.py[cod]
