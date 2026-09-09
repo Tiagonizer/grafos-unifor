@@ -3,6 +3,26 @@
 Mesma instância do Marco 3 (árvore, sem ciclos): `n=7, m=6, l=1`. Arestas
 `1->2, 1->3, 3->4, 4->5, 4->6, 4->7`. Fonte: `{1}`.
 
+A BFS não é a solução enviada ao juiz (ver §5), mas está implementada e
+executável em [src/bfs_referencia.py](../src/bfs_referencia.py) — cópia de
+`algs4/breadth_first_paths.py` — justamente para que esta comparação não
+fique só no papel:
+
+```
+$ python3 bfs_referencia.py < ../dados/testes/arvore.in
+=== Caso 1 (fonte = 1) ===
+v | nivel | predecessor
+1 | 0 | -
+2 | 1 | 1
+3 | 1 | 1
+4 | 2 | 3
+5 | 3 | 4
+6 | 3 | 4
+7 | 3 | 4
+```
+
+Confere com as tabelas abaixo.
+
 ## 1. Execução manual da BFS
 
 Fila (FIFO): a fonte entra primeiro; a cada passo retira-se o vértice da
@@ -84,8 +104,10 @@ a profundidade máxima da cadeia. A BFS, por avançar em ondas, entrega a
 distância mínima até a fonte, não o encadeamento mais profundo que estamos
 querendo medir.
 
-Na prática a DFS é implementada de forma **iterativa com pilha explícita**
-(não recursiva), pois `n` pode chegar a `10.000` e uma cadeia longa
-(`1->2->...->10000`) estouraria a pilha de chamadas do Python. Assim
-mantém-se a robustez de uma implementação iterativa sem abrir mão da
-informação de profundidade que motivou a escolha.
+Na prática, a DFS não foi reescrita: a solução usa a classe `DirectedDFS`
+de `algs4/directed_dfs.py` como está, acompanhada de `Digraph`, `Bag`,
+`Node` e `LinkIterator` — as mesmas classes do subconjunto usado em aula,
+copiadas para dentro de [src/main.py](../src/main.py) apenas porque o juiz
+aceita o envio de um único arquivo. A recursão do original é preservada; o
+limite de profundidade necessário para `n = 10.000` é resolvido no programa
+principal, como descrito no [Marco 3](marco-3.md), seção 8.

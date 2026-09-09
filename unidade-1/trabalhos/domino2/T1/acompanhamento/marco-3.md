@@ -7,6 +7,14 @@ Instância de exemplo (árvore, sem ciclos): `n=7, m=6, l=1`. Arestas
 
 Ordem de visita (percorrendo `adj[v]` em ordem crescente):
 
+> **Nota de implementação.** `Bag` (`algs4/bag.py`) insere cada aresta na
+> *frente* de uma lista ligada, então iterar `adj[v]` devolve as arestas na
+> ordem **inversa** à de inserção. Em [src/main.py](../src/main.py), as
+> arestas de cada caso são inseridas de trás para frente (`for x, y in
+> reversed(arestas)`) justamente para cancelar essa inversão — o resultado
+> é que `adj[v]` acaba na mesma ordem em que as arestas foram lidas da
+> entrada, que nesta instância já é a ordem crescente usada abaixo.
+
 | ordem | vértice visitado |
 |-------|-------------------|
 | 1     | 1                 |
@@ -91,11 +99,20 @@ vértices deixaram de ser brancos.
 
 ## 8. Adaptação parcial
 
-A versão final da solução usa DFS **iterativa com pilha explícita** em vez
-de recursiva, porque `n` pode chegar a `10.000` e uma DFS recursiva em
-Python arrisca estourar a pilha de chamadas em grafos com caminhos longos
-(o limite padrão de recursão do interpretador é bem menor que `10.000`).
-Os tempos de descoberta/término (seção 4) são removidos da versão de
-submissão, pois não são necessários para calcular `|R(S)|` — a versão final
-guarda apenas o vetor de visitados, reduzindo memória e trabalho por
-vértice.
+A solução final não reimplementa a DFS: usa a classe `DirectedDFS` de
+`algs4/directed_dfs.py`, que já resolve exatamente "alcançabilidade a
+partir de um conjunto de fontes" em um dígrafo. A classe é copiada sem
+nenhuma alteração — inclusive a DFS **recursiva** do original.
+
+O que a solução adapta é só o entorno:
+
+- Os tempos de descoberta e término (seção 4) não são calculados. O
+  problema pede apenas `|R(S)|`, e `DirectedDFS` guarda somente o vetor de
+  visitados; o total sai de uma varredura de `marked(v)` no fim.
+- Como `n` pode chegar a `10.000`, uma cadeia `1 -> 2 -> ... -> 10000`
+  daria `10.000` chamadas aninhadas, acima do limite padrão de recursão do
+  CPython (`1.000`). Em vez de reescrever a DFS, o programa principal eleva
+  `sys.setrecursionlimit` e roda a solução numa thread com pilha maior
+  (`threading.stack_size`) — assim a classe do algs4 continua intacta.
+
+Código em [src/main.py](../src/main.py).

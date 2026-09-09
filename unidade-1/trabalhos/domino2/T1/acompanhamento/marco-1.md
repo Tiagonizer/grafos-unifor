@@ -41,7 +41,7 @@ Saída: `T` linhas, uma por caso, com o total de peças caídas.
     à mão, resposta sempre `0`).
 
 Como nada disso é proibido, a solução precisa ser correta mesmo nesses
-casos — ver [tests/casos_de_borda.in](../tests/casos_de_borda.in).
+casos — ver [dados/testes/casos_de_borda.in](../dados/testes/casos_de_borda.in).
 
 ## 4. Vértices e arestas
 
@@ -100,8 +100,8 @@ exatamente por que a direção da aresta importa — ver seção 5.
 Essa instância foi escolhida de propósito para cobrir, em um único caso:
 ciclo (`1 -> 2 -> 3 -> 1`), laço (`4 -> 4`), vértice inalcançável com grau
 de entrada zero (`5`) e uma componente separada do resto do grafo (`6 <-> 7`).
-Arquivos correspondentes: [tests/instancia_pequena.in](../tests/instancia_pequena.in)
-e [tests/instancia_pequena.out](../tests/instancia_pequena.out).
+Arquivos correspondentes: [dados/testes/instancia_pequena.in](../dados/testes/instancia_pequena.in)
+e [dados/testes/instancia_pequena.out](../dados/testes/instancia_pequena.out).
 
 ## 7. Hipótese inicial de solução
 

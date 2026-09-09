@@ -46,22 +46,34 @@ estrutura correta.
 
 ## 3. Leitura da entrada e construção
 
+A lista de adjacência não é montada à mão: usamos a classe `Digraph` do
+subconjunto `algs4-py` disponibilizado na disciplina, que é exatamente um
+vetor de `Bag` (lista ligada) de sucessores — a estrutura escolhida acima.
+
 ```python
 n = prox(); m = prox(); l = prox()
 
-adj = [[] for _ in range(n + 1)]
+g = Digraph(n + 1)          # índice 0 não é usado (peças são 1..n)
 for _ in range(m):
-    x = prox(); y = prox()
-    adj[x].append(y)   # aresta dirigida x -> y
+    g.add_edge(prox(), prox())   # aresta dirigida x -> y
 ```
 
-Código completo em [src/solucao.py](../src/solucao.py); leitura auxiliar de
+O `algs4` numera vértices de `0` a `V-1`, enquanto o enunciado numera as
+peças de `1` a `n`. Em vez de adaptar a classe, alocamos `n + 1` posições e
+deixamos o índice `0` sem uso — a classe fica idêntica à do professor e o
+custo extra é de uma posição por caso de teste.
+
+`Digraph.add_edge` insere `y` em `adj[x]` em `O(1)` e incrementa `E`; não
+remove laços nem arestas paralelas, o que é o comportamento correto aqui
+(ver [Marco 1](marco-1.md), seção 3).
+
+Código completo em [src/main.py](../src/main.py); leitura auxiliar de
 medidas estruturais em [src/medidas.py](../src/medidas.py).
 
 ## 4. Medidas estruturais da instância pequena
 
 Grafo: `n=7, m=8`, arestas `1->2, 2->3, 3->1, 3->4, 4->4, 5->4, 6->7, 7->6`,
-fontes `{1, 6}` (ver [Marco 1](marco1-modelagem.md), seção 6).
+fontes `{1, 6}` (ver [Marco 1](marco-1.md), seção 6).
 
 | v | d+(v) | d-(v) |
 |---|-------|-------|
@@ -75,7 +87,7 @@ fontes `{1, 6}` (ver [Marco 1](marco1-modelagem.md), seção 6).
 
 - **Densidade:** `m/(n*(n-1)) = 8/42 ≈ 0,190476`.
 - **Fontes:** `2` declaradas, `2` distintas (sem repetição neste caso; ver
-  caso de borda `D` em [tests/casos_de_borda.in](../tests/casos_de_borda.in)
+  caso de borda `D` em [dados/testes/casos_de_borda.in](../dados/testes/casos_de_borda.in)
   para fonte repetida).
 - **Componentes fracamente conexas:** `2` — `{1,2,3,4,5}` e `{6,7}` (ligação
   por `3->4` e `5->4`; o laço `4->4` não afeta a contagem).
@@ -83,9 +95,10 @@ fontes `{1, 6}` (ver [Marco 1](marco1-modelagem.md), seção 6).
   trivialmente forte), `{5}` (isolado), `{6,7}` (ciclo mútuo).
 
 Saída real de [src/medidas.py](../src/medidas.py) sobre
-[tests/instancia_pequena.in](../tests/instancia_pequena.in):
+[dados/testes/instancia_pequena.in](../dados/testes/instancia_pequena.in):
 
 ```
+=== Caso 1 ===
 n=7 m=8 l=2
 soma grau_saida=8  soma grau_entrada=8  m=8
 densidade m/(n*(n-1))=0.190476
@@ -93,6 +106,10 @@ fontes declaradas=2  fontes distintas=2
 componentes fracamente conexos=2
 componentes fortemente conexos=4
 ```
+
+As componentes fracas saem de `UF` (`algs4/uf.py`) e as fortes de
+`KosarajuSCC` (`algs4/kosaraju_scc.py`), ambas usadas como estão em
+[src/medidas.py](../src/medidas.py) em vez de reimplementadas.
 
 ## 5. Validação da representação
 
