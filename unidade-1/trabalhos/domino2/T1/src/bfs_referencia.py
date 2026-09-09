@@ -49,13 +49,22 @@ for x, y in arestas:
     g.add_edge(x, y)
 
 s = fontes[0]
-bfs = BreadthFirstPaths(g, s)
+busca = BreadthFirstPaths(g, s)
 
-marked = ["T" if bfs.has_path_to(v) else "F" for v in range(1, n + 1)]
-edge_to = [str(bfs.edge_to[v]) if v != s and bfs.has_path_to(v) else "-"
-           for v in range(1, n + 1)]
+vertices = range(1, n + 1)
+marked = ["T" if busca.has_path_to(v) else "F" for v in vertices]
+edge_to = [str(busca.edge_to[v]) if v != s and busca.has_path_to(v) else "-"
+           for v in vertices]
 
+print("algoritmo = BFS")
 print("fonte = %d" % s)
-print("v      : " + " ".join(str(v) for v in range(1, n + 1)))
-print("marked : " + " ".join(marked))
-print("edge_to: " + " ".join(edge_to))
+print()
+print("lista de adjacencia:")
+for v in vertices:
+    print("  %d -> %s" % (v, ", ".join(str(w) for w in g.adj[v])))
+print()
+print("v       : " + " ".join(str(v) for v in vertices))
+print("marked  : " + " ".join(marked))
+print("edge_to : " + " ".join(edge_to))
+print()
+print("total de pecas que caem = %d" % sum(1 for v in vertices if busca.has_path_to(v)))

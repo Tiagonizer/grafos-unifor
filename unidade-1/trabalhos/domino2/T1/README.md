@@ -17,9 +17,8 @@ T1/
 ├── acompanhamento/       marcos 1 a 4 (modelagem, representação, DFS, BFS)
 ├── src/
 │   ├── main.py             solução enviada ao juiz (DFS, só classes do algs4)
-│   ├── medidas.py          script de apoio do Marco 2 (não é enviado)
-│   ├── bfs_referencia.py   BFS de referência para o Marco 4 (não é enviado)
-│   └── simplificado.py     mesma solução com listas Python comuns (estudo)
+│   ├── dfs_referencia.py   DFS didática: imprime adjacência, marked e edge_to
+│   └── bfs_referencia.py   BFS didática: mesmo formato do dfs_referencia.py
 ├── evidencias/           comprovante de "Accepted" no juiz
 ├── apresentacao/         slides
 └── dados/
@@ -39,16 +38,14 @@ literais**, sem nenhuma alteração:
 | `Node`, `LinkIterator` | `algs4/utils/linklist.py` | lista ligada da `Bag` |
 | `Bag` | `algs4/bag.py` | lista de sucessores de um vértice |
 | `Digraph` | `algs4/digraph.py` | o grafo (vetor de `Bag`) |
-| `DirectedDFS` | `algs4/directed_dfs.py` | alcançabilidade multi-fonte |
-| `UF` | `algs4/uf.py` | componentes fracamente conexas (`medidas.py`) |
-| `DepthFirstOrder` | `algs4/depth_first_order.py` | pós-ordem para Kosaraju |
-| `KosarajuSCC` | `algs4/kosaraju_scc.py` | componentes fortemente conexas |
-| `BreadthFirstPaths` | `algs4/breadth_first_paths.py` | BFS de referência (`bfs_referencia.py`) |
+| `DirectedDFS` | `algs4/directed_dfs.py` | alcançabilidade multi-fonte (`main.py`) |
+| `DepthFirstPaths` | `algs4/depth_first_paths.py` | DFS de fonte única (`dfs_referencia.py`) |
+| `BreadthFirstPaths` | `algs4/breadth_first_paths.py` | BFS de fonte única (`bfs_referencia.py`) |
 
-Elas estão copiadas dentro de `src/main.py`, e não importadas, porque o
-juiz aceita o envio de um único arquivo. `src/medidas.py` e
-`src/bfs_referencia.py` importam `Digraph` de `main.py`, então não há
-duplicação entre os arquivos.
+As classes usadas pela solução estão copiadas dentro de `src/main.py`, e
+não importadas, porque o juiz aceita o envio de um único arquivo.
+`src/dfs_referencia.py` e `src/bfs_referencia.py` importam `Digraph` de
+`main.py` e só acrescentam a classe de busca correspondente.
 
 O único código escrito por nós é a leitura da entrada e a impressão do
 resultado, no bloco `if __name__ == '__main__'` de cada arquivo. Dois
@@ -71,17 +68,14 @@ pontos desse bloco merecem nota:
 ```sh
 cd src
 
-# resolve uma entrada
+# resolve uma entrada (saída = um número por caso, formato do juiz)
 python3 main.py < ../dados/testes/sample.in
 
-# medidas estruturais de uma instância (Marco 2)
-python3 medidas.py < ../dados/testes/instancia_pequena.in
+# DFS didática: lista de adjacência, marked e edge_to
+python3 dfs_referencia.py < ../dados/testes/arvore.in
 
-# BFS de referência sobre a árvore dos Marcos 3/4 (listas marked e edge_to)
+# BFS didática: mesmo formato, para comparar com a DFS
 python3 bfs_referencia.py < ../dados/testes/arvore.in
-
-# mesma solução, sem as classes do algs4, para estudo
-python3 simplificado.py < ../dados/testes/sample.in
 
 # suíte de testes
 bash ../dados/testes/run_tests.sh
