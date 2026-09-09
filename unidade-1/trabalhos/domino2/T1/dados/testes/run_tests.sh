@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# Roda src/main.py contra cada par .in/.out desta pasta.
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC="$DIR/../src/solucao.py"
+SRC="$DIR/../../src/main.py"
 
 status=0
 for in_file in "$DIR"/*.in; do

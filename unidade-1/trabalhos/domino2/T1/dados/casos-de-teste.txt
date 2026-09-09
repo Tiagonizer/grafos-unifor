@@ -1,0 +1,110 @@
+Dominó 2 — casos de teste
+=========================
+
+Cada caso abaixo está também em testes/<nome>.in (entrada) e
+testes/<nome>.out (saída esperada), no formato lido por src/main.py.
+Para rodar todos de uma vez: bash testes/run_tests.sh
+
+Formato da entrada:
+  T
+  n m l
+  x_1 y_1          (m linhas: a queda de x derruba y)
+  ...
+  z_1              (l linhas: peças derrubadas à mão)
+  ...
+Saída: T linhas, cada uma com o total de peças caídas, |R(S)|.
+
+
+-------------------------------------------------------------------------
+1) sample — exemplo do enunciado
+-------------------------------------------------------------------------
+Cobre: caminho simples, fonte no meio da cadeia.
+n=3, m=2, l=1. Arestas 1->2, 2->3. Fonte {2}.
+A peça 1 não cai: ela derruba 2, mas nada a derruba.
+
+entrada                       saída
+1                             2
+3 2 1
+1 2
+2 3
+2
+
+
+-------------------------------------------------------------------------
+2) instancia_pequena — instância de validação do Marco 1
+-------------------------------------------------------------------------
+Cobre, em um único caso: ciclo (1->2->3->1), laço (4->4), vértice
+inalcançável com grau de entrada zero (5), componente separada (6<->7) e
+duas fontes.
+n=7, m=8, l=2. Fontes {1, 6}.
+R({1,6}) = {1,2,3,4,6,7} -> 6. O vértice 5 não cai.
+
+entrada                       saída
+1                             6
+7 8 2
+1 2
+2 3
+3 1
+3 4
+4 4
+5 4
+6 7
+7 6
+1
+6
+
+
+-------------------------------------------------------------------------
+3) arvore — instância dos Marcos 3 e 4
+-------------------------------------------------------------------------
+Cobre: grafo acíclico em forma de árvore, usado para a execução manual da
+DFS (marco-3.md) e da BFS (marco-4.md).
+n=7, m=6, l=1. Arestas 1->2, 1->3, 3->4, 4->5, 4->6, 4->7. Fonte {1}.
+Toda peça é descendente de 1 -> caem as 7.
+
+entrada                       saída
+1                             7
+7 6 1
+1 2
+1 3
+3 4
+4 5
+4 6
+4 7
+1
+
+
+-------------------------------------------------------------------------
+4) casos_de_borda — cinco casos limite em uma só entrada
+-------------------------------------------------------------------------
+A) l=0 e m=0: nenhuma peça empurrada, nenhuma relação  -> 0
+B) l=0 com aresta existente: sem fonte, nada cai        -> 0
+C) laço (1->1) mais aresta 1->2, fonte {1}: o laço não
+   pode contar a peça duas vezes                        -> 2
+D) fonte repetida ({1,1,1}) numa cadeia 1->2->3: a
+   repetição não pode inflar a contagem                  -> 3
+E) duas componentes disjuntas com uma fonte em cada
+   (1->2 e 4->5, fontes {1,4}); os vértices 3 e 6 são
+   isolados e não caem                                   -> 4
+
+entrada                       saída
+5                             0
+3 0 0                         0
+2 1 0                         2
+1 2                           3
+2 3 1                         4
+1 1
+1 2
+1 2
+1
+3 2 3
+1 2
+2 3
+1
+1
+1
+6 2 2
+1 2
+4 5
+1
+4
