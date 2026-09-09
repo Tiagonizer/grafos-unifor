@@ -77,7 +77,7 @@ python3 main.py < ../dados/testes/sample.in
 # medidas estruturais de uma instância (Marco 2)
 python3 medidas.py < ../dados/testes/instancia_pequena.in
 
-# BFS de referência sobre a árvore dos Marcos 3/4 (níveis e predecessores)
+# BFS de referência sobre a árvore dos Marcos 3/4 (listas marked e edge_to)
 python3 bfs_referencia.py < ../dados/testes/arvore.in
 
 # mesma solução, sem as classes do algs4, para estudo
