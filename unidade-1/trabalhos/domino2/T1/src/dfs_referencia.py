@@ -65,6 +65,11 @@ def main():
     print("edge_to : " + " ".join(edge_to))
     print()
     print("total de pecas que caem = %d" % sum(1 for v in vertices if busca.has_path_to(v)))
+    print()
+    print("listas criadas (indice 0 nao usado):")
+    print("  adj     = %s" % [list(g.adj[v]) for v in range(g.V)])
+    print("  marked  = %s" % busca.marked)
+    print("  edge_to = %s" % busca.edge_to)
 
 
 sys.setrecursionlimit(30000)
